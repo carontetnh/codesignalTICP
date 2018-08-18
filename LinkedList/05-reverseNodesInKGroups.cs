@@ -5,43 +5,66 @@
 // }
 //
 ListNode<int> reverseNodesInKGroups(ListNode<int> l, int k) {
-      ListNode<int> x = l;
-      ListNode<int> prev = null;
-      ListNode<int> head = l;
-      ListNode<int> head_before = null;
-      ListNode<int> new_head = null;
-      int index = 1;
-      while(x != null) {
-         ListNode<int> x_next = x.next;
-
-         if(index != 0 && index % k == 0) {
-
-            ListNode<int> x2 = head;
-            ListNode<int> prev2 = x_next;
-
-            while(x2 != x){
-               ListNode<int> x2_next = x2.next;
-               x2.next = prev2;
-               prev2 = x2;
-               x2 = x2_next;
+    
+    if(k == 1){
+        return l;  
+    }
+    
+    ListNode<int> x = l;
+    ListNode<int> final = null;
+    ListNode<int> reverseHead = null;
+    ListNode<int> prevReverseHead = null;
+    ListNode<int> reverseTail = null;
+    ListNode<int> lastTail = null;
+    ListNode<int> current = null;
+    int cont = 1;
+    
+    while(x != null){
+        if(cont % k == 0){
+            if(final == null){
+                final = new ListNode<int>();
+                final.value = x.value;
+                final.next = reverseHead;
+                lastTail = reverseTail;
             }
-
-            x.next = prev2;
-
-            if(index == k) {
-               new_head = x;
+            else{
+                prevReverseHead = reverseHead;
+                reverseHead = new ListNode<int>();
+                reverseHead.value = x.value;
+                reverseHead.next = prevReverseHead;
+                lastTail.next = reverseHead;
+                lastTail = reverseTail;
             }
-
-            if(head_before != null) head_before.next = x;
-            head_before = head;
-            head = x_next;
-         }
-
-         index++;
-         prev = x;
-         x = x_next;
-      }
-
-      if(new_head == null) return l;
-      return new_head;
+            
+        }
+        if(cont % k == 1)
+        {
+            reverseTail = new ListNode<int>();
+            reverseTail.value = x.value;
+            reverseHead = reverseTail;
+            current = x;
+        }
+        else{
+            if(reverseHead == null){
+                reverseHead = new ListNode<int>();
+                reverseHead.value = x.value;
+            }
+            else{
+                prevReverseHead = reverseHead;
+                reverseHead = new ListNode<int>();
+                reverseHead.value = x.value;
+                reverseHead.next = prevReverseHead;
+            }
+        }
+        
+        cont++;
+        x = x.next; 
+    }
+    
+    if((cont-1) % k != 0)
+    {
+        lastTail.next = current;
+    }
+    
+    return final;
 }
